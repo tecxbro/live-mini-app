@@ -2,13 +2,15 @@
 
 ## Verify the source you are installing
 
-Take this package from [tecxbro/live-mini-app](https://github.com/tecxbro/live-mini-app), release `handoff-2026-09-26`, or its matching release attachment. Use your own installation tools and execution workflow. The old `liveminiappdesign` commit `090fa77` is not this package.
+Take this package from [tecxbro/live-mini-app](https://github.com/tecxbro/live-mini-app), release `v1.1.0`, or its matching release attachment. Use your own installation tools and execution workflow. The old `liveminiappdesign` commit `090fa77` is not this package.
 
 Before integration, confirm the installed source includes `public/matrix-live.mjs`, `public/card-theme.mjs`, `src/loaders.mjs`, `docs/CUSTOM_LOADERS.md`, and the complete `skills/dot-matrix-mini-app` directory. Its model accepts four templates including `matrix`, and both `dark` and `light` themes. Verify the file manifest and report the installed commit or archive checksum. A three-layout navy-only installation is the wrong source.
 
 Compare the actual production host build with this source before sending another card. An accepted new message can still point to an old host build. Preserve existing stable URLs, saved task history, credentials and the messaging runtime while integrating. If the existing host uses a different persistence adapter, such as Blob, inspect its data and routes and plan a compatible migration; do not point the new implementation at an empty registry or silently discard existing cards. Report any unresolved migration or executor prerequisite explicitly.
 
 ## Install and connect
+
+Read `docs/STORAGE.md` before upgrading an existing installation. Version 1.1.0 optimizes Redis reads and writes per card. Legacy Redis data requires the documented backed-up migration with old writers stopped; a Blob host needs its own verified migration path. Confirm `/health` reports `1.1.0` on the actual production deployment, then verify data at the existing card URLs.
 
 Install and connect the supplied `live-task-cards` implementation. Do not rewrite it or generate new designs/images for ordinary task updates. Explicit requests for a personal dot-matrix loader use the bundled conversion skill as described below.
 

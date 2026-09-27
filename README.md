@@ -6,7 +6,7 @@ Four reusable, read-only task-progress layouts for Grokbot + Photon iMessage.
 
 This implementation is published at [tecxbro/live-mini-app](https://github.com/tecxbro/live-mini-app). Use this repository or its versioned release archive for installation. The initial `liveminiappdesign` commit `090fa77` is an older three-layout package and does not contain the matrix, dark/light themes, personal loaders, or the current state-only progress update flow.
 
-The `handoff-2026-09-26` release includes all four layouts, weighted matrix workflow progress, requested light mode, and the complete opt-in personal-loader implementation and skill. `HANDOFF.md` describes how to connect them to the actual executor. Published source is not evidence that an existing production host or bot has been upgraded.
+The `v1.1.0` release includes all four layouts, weighted matrix workflow progress, requested light mode, and the complete opt-in personal-loader implementation and skill. `HANDOFF.md` describes how to connect them to the actual executor. Published source is not evidence that an existing production host or bot has been upgraded.
 
 **Grokbot changes JSON data. It does not rewrite a website, generate an image, or redeploy a page for each update.**
 
@@ -81,6 +81,8 @@ No approval callback is needed: the user only reads the card. Questions, approva
 `HANDOFF.md` is the message to give Grokbot. `INSTALL.md` explains local/Vercel setup. `DESIGN.md` locks the visual system. `SKILL.md` is the bot's operating manual. `docs/API.md` specifies the implemented API. `docs/INTEGRATION.md` explains the existing-runtime hook and its recovery boundary.
 
 ## Storage and capacity
+
+Redis now stores cards separately: ordinary card reads and milestone writes touch only the selected card and its loader, plus small coordination counters on writes. Shared operations such as slot allocation and loader changes remain atomic across the registry. Existing Redis installations require a backed-up migration; see [storage and upgrade instructions](docs/STORAGE.md). This does not migrate an existing Blob host.
 
 The limit is ten **current assignments**, not ten tasks ever created. One host serves every slot and historical card. A completed card releases its slot after the initial send is reconciled. A reused slot gets a new card identity; old URLs never show a different task.
 

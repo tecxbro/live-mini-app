@@ -45,6 +45,8 @@ The CLI publishes the **page**. `examples/existing-runtime.mjs` supplies the ini
 
 ## Vercel host
 
+For an existing installation, read `docs/STORAGE.md` first. The v1.1.0 Redis hash layout requires an explicit backed-up upgrade from the old JSON-string registry. Keep the original namespace, signing secret and origin, and stop old writers during cutover. Blob migration is not supplied by this tool.
+
 Reuse the authorized mini-app Vercel project for this user's setup. Configure it for this package, with `npm run build` as the build command and the Other/framework-none preset. The included Build Output API generator creates `.vercel/output` with one Node.js 22 function. It includes only application code, public assets and illustrative examples, not `.env` or state files.
 
 Set these environment values using the existing authorized deployment tooling; do not paste real secrets into an ordinary chat response:
@@ -106,7 +108,7 @@ Keep the authorized Vercel deployment and durable storage available so the same 
 
 Do not wipe `.data/cards.json` or the Redis key on restart. Unknown/in-flight presentations retain their assignments. For a verified dead local development process that left a `.lock` directory, confirm the owner has stopped before manually removing only that lock; never remove the registry. Do not force-steal an active lock.
 
-Application rollback must retain the same compatible storage namespace and view secret. The V1 registry uses schema 1 and rejects corrupt/unrecognized state. Do not downgrade by deleting state. Old card URLs remain bound to their original card, until the explicit historical retention policy makes them unavailable.
+Application rollback must retain the same compatible storage namespace and view secret. Card data retains schema 1, but v1.1.0 Redis storage uses the version-2 hash layout. Old host versions cannot read it; follow the rollback procedure in `docs/STORAGE.md`. Corrupt or unrecognized state is rejected. Do not downgrade by deleting state. Old card URLs remain bound to their original card, until the explicit historical retention policy makes them unavailable.
 
 Disable card publishing through the existing runtime integration before removing a deployment. Continue normal iMessage text delivery through the original sender. Removing this package is not a reason to restart or replace the transport unless the existing deployment procedure requires it.
 

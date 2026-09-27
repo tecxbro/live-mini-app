@@ -87,7 +87,7 @@ export class CardService {
       return this.output(record);
     });
   }
-  async get(id) { return this.output(this.require(await this.store.read(), id)); }
+  async get(id) { return this.output(this.require(await this.store.readCard(id), id)); }
   async slots() {
     const s = await this.store.read();
     return SLOT_NAMES.map(slot => {
@@ -99,7 +99,7 @@ export class CardService {
   }
   async update(id, input) {
     const b = parseUpdate(input), hash = digest(b), now = this.now();
-    return this.store.transaction(s => {
+    return this.store.transactionCard(id, s => {
       const r = this.require(s, id);
       if (r.lastUpdate?.requestId === b.requestId) {
         assert(r.lastUpdate.hash === hash, 'IDEMPOTENCY_CONFLICT', 'Update requestId was reused with different content.', 409);
@@ -119,7 +119,6 @@ export class CardService {
       r.workflowTiming = workflowTiming(b.content, now, r.workflowTiming);
       r.content = b.content; r.revision++; r.updatedAt = now;
       r.lastUpdate = { requestId: b.requestId, hash };
-      this.prune(s, now);
       return this.output(r);
     });
   }
@@ -127,7 +126,7 @@ export class CardService {
     object(input, 'presentation', ['revision']);
     const revision = integer(input.revision, 'revision', 1, Number.MAX_SAFE_INTEGER);
     const attemptId = this.newId(), now = this.now();
-    return this.store.transaction(s => {
+    return this.store.transactionCard(id, s => {
       const r = this.require(s, id); this.available(r);
       assert(!r.activeAttempt, 'PRESENTATION_PENDING', 'Reconcile the initial send first.', 409);
       assert(r.revision === revision, 'REVISION_CONFLICT', 'Present only the current saved revision.', 409);
@@ -144,7 +143,7 @@ export class CardService {
     const b = { attemptId, outcome: input.outcome, messageRef: input.messageRef == null ? null : text(input.messageRef, 'messageRef', 256),
       note: text(input.note, 'note', 160, true) };
     const now = this.now(), hash = digest(b);
-    return this.store.transaction(s => {
+    return this.store.transactionCard(id, s => {
       const r = this.require(s, id);
       if (!r.activeAttempt && r.delivery.lastAttempt?.id === attemptId) {
         assert(r.delivery.lastAttempt.hash === hash, 'SETTLEMENT_CONFLICT', 'This presentation has already been settled differently.', 409);
@@ -204,7 +203,7 @@ export class CardService {
   }
   async view(slot, id, key) {
     assert(secureEqual(this.key({ slot, id }), key), 'CARD_NOT_FOUND', 'Card is unavailable.', 404);
-    const state = await this.store.read();
+    const state = await this.store.readCard(id);
     const r = this.require(state, id);
     assert(r.slot === slot, 'CARD_NOT_FOUND', 'Card is unavailable.', 404);
     const expired = r.archivedAt && Date.parse(r.archivedAt) < this.clock().getTime() - this.config.archiveDays * 86400_000;

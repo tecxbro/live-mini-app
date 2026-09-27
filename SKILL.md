@@ -1,7 +1,7 @@
 ---
 name: live-task-cards
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 description: Publish and update a read-only Photon task-progress card using supplied templates and the existing messaging runtime. Never regenerate its page for ordinary task updates.
 ---
 

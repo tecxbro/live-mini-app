@@ -1,3 +1,11 @@
+# Per-card storage handoff — v1.1.0
+
+Ready to install from `tecxbro/live-mini-app`, release `v1.1.0`, with the explicit upgrade boundary in `docs/STORAGE.md`. The package now reads/writes individual Redis card records for normal progress and send-ledger operations. Full coordination is retained for slots, history pruning and personal-loader changes. An existing legacy Redis registry stays readable but requires a private backup and explicit migration before v1.1.0 writes. Blob migration remains environment-specific.
+
+Fresh local evidence: 128 package tests, 7 skill tests, 18 storage tests run again with actual Redis/Lua, 62 syntax-checked modules, validated task/loader payloads, and a successful Vercel build. Source/archive hashes are regenerated for this release. Physical device and production deployment remain separate acceptance steps.
+
+---
+
 # Canonical publication verification — 2026-09-26
 
 Publication target: `https://github.com/tecxbro/live-mini-app`, release `handoff-2026-09-26`.

@@ -8,7 +8,7 @@ Private pages and view JSON use no-store, no-referrer, noindex and a restrictive
 
 Header assets are local and allowlisted. Text is escaped for both HTML and JSON bootstrap. Content accepts no raw HTML/CSS/JavaScript or user-defined URLs. The writer token and view secret must differ. Change/rotate them through deliberate deployment procedures; rotating the view secret invalidates existing read links.
 
-The Redis store uses atomic EVAL compare-and-swap against a bounded document. It is designed for small, personal ten-slot workloads, not a high-throughput multi-tenant service. Reads fetch that registry internally; the public response includes one permitted card only. Use durable, non-evicting storage. Back up that namespace. Infrastructure data loss cannot safely be interpreted as proof that no messages were sent.
+The Redis store uses atomic Lua comparisons over separate card/asset fields in one hash. Ordinary card reads fetch only the permitted card and its selected asset; routine card writes compare the whole saved record, including delivery state. Shared slot/preference operations compare the registry version to avoid losing concurrent card writes. It remains designed for small, personal ten-slot workloads. Legacy migration and rollback are described in `STORAGE.md`. Use durable, non-evicting storage. Back up that namespace. Infrastructure data loss cannot safely be interpreted as proof that no messages were sent.
 
 The default archive is bounded by 30 days/100 records; active and unknown assignments are not evicted by age. Adjust that product retention policy deliberately. There is a 3 MB registry safety bound and a 16 KiB API request bound. The documented configuration caps do not establish a free or unlimited hosting budget.
 

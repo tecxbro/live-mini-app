@@ -86,7 +86,7 @@ export function createHandler(service, config) {
         const bytes = await readFile(new URL(`../public/${file}`, import.meta.url));
         return send(res, 200, bytes, type, method === 'HEAD');
       }
-      if (isRead && path === '/health') return send(res, 200, { ok: true, app: 'live-task-cards', version: '1.0.0' }, undefined, method === 'HEAD');
+      if (isRead && path === '/health') return send(res, 200, { ok: true, app: 'live-task-cards', version: '1.1.0' }, undefined, method === 'HEAD');
       if (isRead && config.demos && (path === '/' || path === '/preview')) return send(res, 200, galleryHTML(), 'text/html; charset=utf-8', method === 'HEAD');
       const demo = /^\/demo\/([a-z]+)$/.exec(path);
       if (isRead && config.demos && demo) {

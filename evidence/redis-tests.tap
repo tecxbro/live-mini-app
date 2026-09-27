@@ -1,0 +1,26 @@
+✔ card refresh reads only the selected record and its loader, with no storage write (122.060625ms)
+✔ a milestone changes only that card plus shared version and size counters (116.016917ms)
+✔ card read size stays constant when unrelated retained history grows (117.88375ms)
+✔ different cards update concurrently without retrying shared registry versions (114.214292ms)
+✔ same-card competing milestones reject a stale revision and retain one winner (120.066625ms)
+✔ global transaction retries after a card write instead of losing the milestone (122.481417ms)
+✔ personalization racing a milestone cannot be overwritten by the card transaction (119.451084ms)
+✔ concurrent creates allocate at most ten unique slots (214.375958ms)
+✔ unknown sends survive targeted milestones and still block release until reconciled (109.942458ms)
+✔ concurrent send claims produce only one initial-send permission (109.342458ms)
+✔ lost write acknowledgment can be reconciled without advancing the revision again (107.341041ms)
+✔ legacy migration requires a backup and preserves URLs, history, loaders, and send ledger (184.8065ms)
+✔ a prune racing a retained-card write cannot resurrect the deleted record (106.78475ms)
+✔ migration refuses a failed backup or concurrent legacy write without changing it (113.346291ms)
+✔ missing/corrupt records fail closed and unknown layouts never become an empty pool (106.598292ms)
+✔ registry size bound is enforced before a card write (107.789458ms)
+✔ storage/network failures remain errors, not a fresh empty pool (0.426458ms)
+✔ conflicts exhaust a bounded retry budget (108.021542ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2225.669166

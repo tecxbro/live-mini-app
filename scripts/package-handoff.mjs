@@ -10,8 +10,8 @@ const temp = await mkdtemp(join(tmpdir(), 'live-card-handoff-'));
 const stage = join(temp, 'live-task-cards');
 const files = ['.env.example', '.gitignore', 'package.json', 'package-lock.json', 'index.mjs', 'server.mjs', 'vercel.json',
   'README.md', 'HANDOFF.md', 'INSTALL.md', 'DESIGN.md', 'SKILL.md',
-  ...['API', 'INTEGRATION', 'ICONS', 'SECURITY', 'SOURCES', 'CUSTOM_LOADERS'].map(n => `docs/${n}.md`),
-  ...['TEST_REPORT.md', 'HANDOFF_READINESS.md', 'unit-tests.tap', 'syntax-check.txt', 'build.txt', 'clean-install.txt'].map(n => `evidence/${n}`),
+  ...['API', 'INTEGRATION', 'ICONS', 'SECURITY', 'SOURCES', 'CUSTOM_LOADERS', 'STORAGE'].map(n => `docs/${n}.md`),
+  ...['TEST_REPORT.md', 'HANDOFF_READINESS.md', 'unit-tests.tap', 'redis-tests.tap', 'syntax-check.txt', 'build.txt', 'clean-install.txt'].map(n => `evidence/${n}`),
   ...['mini-card.css', 'square-animation.js', 'dot-matrix.js', 'mini-core.js', 'mini-card.js'].map(n => `grokbot-matrix/${n}`)];
 async function collect(dir, allowed) {
   for (const entry of await readdir(join(root, dir), { withFileTypes: true })) {
@@ -24,7 +24,7 @@ try {
   for (const dir of ['src', 'bin', 'scripts']) await collect(dir, n => /\.(mjs|d\.ts)$/.test(n));
   await collect('public', n => /\.(mjs|css)$/.test(n));
   await collect('examples', n => /\.(json|mjs)$/.test(n));
-  await collect('tests', n => n.endsWith('.test.mjs') || n === 'helpers.mjs' || n === 'custom-loader-browser.mjs');
+  await collect('tests', n => n.endsWith('.test.mjs') || n === 'helpers.mjs' || n === 'redis-fixture.mjs' || n === 'custom-loader-browser.mjs');
   await collect('skills/dot-matrix-mini-app', n => /\.(md|yaml|py|html|css|js|mjs)$/.test(n));
   await collect('references', n => n.endsWith('.png'));
   const manifest = {};

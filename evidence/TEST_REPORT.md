@@ -1,3 +1,15 @@
+# Per-card Redis verification — v1.1.0
+
+Fresh checks for this release passed: 128 package tests, 7 bundled skill tests, syntax checks for 62 packaged JavaScript modules, validation of four task examples and two loader assets, and the Vercel build.
+
+All 18 storage tests also passed against actual Redis 7.2.4 Lua execution on isolated local Unix sockets. The Redis test binary was compiled from the official redis/redis 7.2.4 source in a temporary directory; no production Redis or messaging credentials were used. Task-owned Redis processes were stopped by the fixture after each test. `redis-tests.tap` contains the results.
+
+The tests establish that card reads return only the selected record/asset, unchanged cards are not written, unrelated cards update without shared-version retries, same-card/global/personalization races cannot lose writes, unknown sends cannot be resent, and a backed-up migration preserves URLs/history/loaders/send records. Read response size remained identical with 90 additional retained historical cards. Backup failure and concurrent migration conflicts leave legacy data unchanged. Tests also cover failed/lost storage responses, missing records, size limits, slot reuse and a prune/write race.
+
+No UI behavior or polling interval was changed. The file store remains a development-only full-document implementation. Shared create/release/pruning/personalization operations still inspect the registry. Production Upstash configuration, migration of an actual Redis or Blob host, live runtime integration and physical iPhone rendering were not performed or verified by this release work. See `docs/STORAGE.md` before upgrading.
+
+---
+
 # Personal loader verification — 2026-09-26
 
 This section supersedes the historical task-motion counts below.
